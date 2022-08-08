@@ -53,6 +53,9 @@ package imgui.app;
  * Use that wisely and remember that all GUI should be in the main thread.
  */
 public abstract class Application extends Window {
+
+    public static boolean DevMode = true;
+
     /**
      * Method called before window creation. Could be used to provide basic window information, like title name etc.
      *

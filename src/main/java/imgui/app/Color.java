@@ -1,5 +1,7 @@
 package imgui.app;
 
+import imgui.ImColor;
+
 import java.util.Arrays;
 
 /**
@@ -47,6 +49,10 @@ public class Color implements Cloneable {
 
     public final float getAlpha() {
         return data[3];
+    }
+
+    public final int getImGuiCol() {
+        return ImColor.floatToColor(data[0], data[1], data[2], data[3]);
     }
 
     @Override

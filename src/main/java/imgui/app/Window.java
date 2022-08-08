@@ -40,7 +40,7 @@ public abstract class Window {
     /**
      * Background color of the window.
      */
-    protected final Color colorBg = new Color(.5f, .5f, .5f, 1);
+    public static final Color colorBg = new Color(0.1411764706f, 0.1411764706f, 0.1411764706f, 1);
 
     /**
      * Method to initialize application.

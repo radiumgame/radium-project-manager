@@ -1,5 +1,8 @@
 package imgui.app;
 
+import imgui.ImGui;
+import main.gui.Themes.Theme;
+
 /**
  * Data class to provide basic information about the window. Like, the title name etc.
  */
@@ -52,4 +55,9 @@ public class Configuration {
     public void setFullScreen(final boolean fullScreen) {
         this.fullScreen = fullScreen;
     }
+
+    public void setTheme(Theme theme) {
+        theme.ApplyTheme(ImGui.getStyle());
+    }
+
 }
