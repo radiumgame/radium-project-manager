@@ -1,0 +1,34 @@
+plugins {
+    id 'java'
+}
+
+group 'org.example'
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation "io.github.spair:imgui-java-binding:1.86.4"
+    implementation "io.github.spair:imgui-java-lwjgl3:1.86.4"
+    implementation "io.github.spair:imgui-java-natives-windows:1.86.4"
+
+    implementation platform("org.lwjgl:lwjgl-bom:3.3.1")
+    implementation "org.lwjgl:lwjgl"
+    implementation "org.lwjgl:lwjgl-assimp"
+    implementation "org.lwjgl:lwjgl-glfw"
+    implementation "org.lwjgl:lwjgl-openal"
+    implementation "org.lwjgl:lwjgl-opengl"
+    implementation "org.lwjgl:lwjgl-stb"
+    runtimeOnly "org.lwjgl:lwjgl::natives-windows"
+    runtimeOnly "org.lwjgl:lwjgl-assimp::natives-windows"
+    runtimeOnly "org.lwjgl:lwjgl-glfw::natives-windows"
+    runtimeOnly "org.lwjgl:lwjgl-openal::natives-windows"
+    runtimeOnly "org.lwjgl:lwjgl-opengl::natives-windows"
+    runtimeOnly "org.lwjgl:lwjgl-stb::natives-windows"
+}
+
+test {
+    useJUnitPlatform()
+}
