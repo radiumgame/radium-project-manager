@@ -11,6 +11,7 @@ import main.gui.Popup.LocateEngine;
 import main.gui.Windows.CreateProject;
 import main.gui.Windows.GuiWindow;
 import main.gui.Themes.ModernDark;
+import main.gui.Windows.RecentProjects;
 
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -27,6 +28,7 @@ public class Main extends Application {
         config.setTitle("Radium Project Manager");
 
         windows.add(new CreateProject());
+        windows.add(new RecentProjects());
 
         new LocateEngine();
 
@@ -34,6 +36,7 @@ public class Main extends Application {
         if (!Files.exists(Paths.get(Settings.SETTINGS_FILE))) {
             settings.Save();
         }
+        settings.Verify();
     }
 
     @Override

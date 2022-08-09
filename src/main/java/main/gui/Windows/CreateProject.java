@@ -2,11 +2,10 @@ package main.gui.Windows;
 
 import imgui.ImGui;
 import main.FileExplorer;
-import main.gui.Popup.GuiPopup;
+import main.Settings;
 import org.eclipse.jgit.api.Git;
 
 import java.io.File;
-import java.io.FilenameFilter;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
@@ -27,6 +26,13 @@ public class CreateProject extends GuiWindow {
 
             CreateProject(path, projectName);
         }
+
+        boolean projectSelected = RecentProjects.selectedProject != null;
+        if (!projectSelected) ImGui.beginDisabled();
+        if (ImGui.button("Open Project")) {
+            OpenProject(RecentProjects.selectedProject);
+        }
+        if (!projectSelected) ImGui.endDisabled();
     }
 
     private void CreateProject(String root, String projectName) {
@@ -38,13 +44,39 @@ public class CreateProject extends GuiWindow {
                     .call();
             git.close();
 
-            File project = new File(root + "/sample-project");
+            File project = new File(root + "/" + projectName);
             File gitDirectory = git.getRepository().getDirectory();
             DeleteDirectory(gitDirectory);
             gitDirectory.delete();
+            RenameFiles(project, projectName);
 
+            Settings.AddRecentProject(project.getAbsolutePath());
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    private void OpenProject(String projectDirectory) {
+        try {
+            String radiumPath = Settings.Instance.RadiumPath;
+            if (Settings.IsEnginePathValid()) {
+                Runtime runtime = Runtime.getRuntime();
+                runtime.exec(radiumPath + " " + projectDirectory);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void RenameFiles(File project, String projectName) {
+        for (File file : project.listFiles()) {
+            if (!file.isFile()) continue;
+
+            String fileName = file.getName();
+            String extension = fileName.substring(fileName.lastIndexOf("."));
+            if (fileName.contains("sample-project")) {
+                file.renameTo(new File(project.getAbsolutePath() + "/" + projectName + extension));
+            }
         }
     }
 
