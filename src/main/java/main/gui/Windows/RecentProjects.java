@@ -1,6 +1,8 @@
 package main.gui.Windows;
 
+import imgui.ImDrawList;
 import imgui.ImGui;
+import imgui.ImVec2;
 import imgui.app.Color;
 import imgui.flag.ImGuiCol;
 import imgui.flag.ImGuiStyleVar;
@@ -20,28 +22,20 @@ public class RecentProjects extends GuiWindow {
 
     @Override
     public void Render() {
+        List<String> projects = Settings.Instance.RecentProjects;
+        for (String project : projects) {
+            RenderProject(project);
+        }
+    }
+
+    private void RenderProject(String project) {
         float ww = ImGui.getWindowWidth();
         float wh = ImGui.getWindowHeight();
-        if (ImGui.beginListBox("Recent Projects", ww * 0.7f, wh * 0.9f)) {
-            List<String> projects = Settings.Instance.RecentProjects;
-            for (String project : projects) {
-                boolean selected = project.equals(selectedProject);
+        ImVec2 pos = ImGui.getCursorScreenPos();
+        boolean selected = project.equals(selectedProject);
 
-                if (selected) {
-                    ImGui.pushStyleColor(ImGuiCol.Header, selectedColor.getImGuiCol());
-                    ImGui.pushStyleColor(ImGuiCol.HeaderHovered, selectedColor.getImGuiCol());
-                    ImGui.pushStyleColor(ImGuiCol.HeaderActive, selectedColor.getImGuiCol());
-                }
-                if (ImGui.selectable(project, selected)) {
-                    selectedProject = project;
-                }
-                if (selected) {
-                    ImGui.popStyleColor(3);
-                }
-            }
-
-            ImGui.endListBox();
-        }
+        ImDrawList drawList = ImGui.getWindowDrawList();
+        drawList.addRectFilled(pos.x, pos.y, pos.x + (ww * 0.8f), pos.y + 50, selected ? selectedColor.getImGuiCol() : 0);
     }
 
 }

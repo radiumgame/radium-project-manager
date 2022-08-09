@@ -6,6 +6,7 @@ import imgui.app.Application;
 import imgui.app.Configuration;
 import imgui.flag.ImGuiConfigFlags;
 import main.gui.Dockspace;
+import main.gui.Popup.CreateProjectPopup;
 import main.gui.Popup.GuiPopup;
 import main.gui.Popup.LocateEngine;
 import main.gui.Windows.CreateProject;
@@ -31,6 +32,7 @@ public class Main extends Application {
         windows.add(new RecentProjects());
 
         new LocateEngine();
+        new CreateProjectPopup();
 
         settings = Settings.Load();
         if (!Files.exists(Paths.get(Settings.SETTINGS_FILE))) {

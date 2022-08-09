@@ -3,6 +3,7 @@ package main.gui.Windows;
 import imgui.ImGui;
 import main.FileExplorer;
 import main.Settings;
+import main.gui.Popup.GuiPopup;
 import org.eclipse.jgit.api.Git;
 
 import java.io.File;
@@ -18,14 +19,9 @@ public class CreateProject extends GuiWindow {
     @Override
     public void Render() {
         if (ImGui.button("Create Project")) {
-            String projectName = "test";
-            String path = FileExplorer.ChooseDirectory();
-            if (!FileExplorer.IsPathValid(path)) {
-                return;
-            }
-
-            CreateProject(path, projectName);
+            GuiPopup.Open("Create Project Menu");
         }
+        GuiPopup.Update("Create Project Menu");
 
         boolean projectSelected = RecentProjects.selectedProject != null;
         if (!projectSelected) ImGui.beginDisabled();
@@ -35,7 +31,7 @@ public class CreateProject extends GuiWindow {
         if (!projectSelected) ImGui.endDisabled();
     }
 
-    private void CreateProject(String root, String projectName) {
+    public static void CreateProject(String root, String projectName) {
         try {
             Files.createDirectories(Paths.get(root + "/" + projectName));
             Git git = Git.cloneRepository()
@@ -68,7 +64,7 @@ public class CreateProject extends GuiWindow {
         }
     }
 
-    private void RenameFiles(File project, String projectName) {
+    private static void RenameFiles(File project, String projectName) {
         for (File file : project.listFiles()) {
             if (!file.isFile()) continue;
 
@@ -80,7 +76,7 @@ public class CreateProject extends GuiWindow {
         }
     }
 
-    private void DeleteDirectory(File file) throws Exception {
+    private static void DeleteDirectory(File file) throws Exception {
         for (File subfile : file.listFiles()) {
             if (subfile.isDirectory()) {
                 DeleteDirectory(subfile);
