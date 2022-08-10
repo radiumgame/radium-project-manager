@@ -4,16 +4,15 @@ import imgui.ImGui;
 import imgui.flag.ImGuiConfigFlags;
 import imgui.gl3.ImGuiImplGl3;
 import imgui.glfw.ImGuiImplGlfw;
-import org.lwjgl.glfw.Callbacks;
-import org.lwjgl.glfw.GLFW;
-import org.lwjgl.glfw.GLFWErrorCallback;
-import org.lwjgl.glfw.GLFWVidMode;
-import org.lwjgl.glfw.GLFWWindowSizeCallback;
+import org.lwjgl.BufferUtils;
+import org.lwjgl.glfw.*;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL32;
+import org.lwjgl.stb.STBImage;
 import org.lwjgl.system.MemoryStack;
 import org.lwjgl.system.MemoryUtil;
 
+import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 import java.util.Objects;
 
@@ -32,7 +31,7 @@ public abstract class Window {
     /**
      * Pointer to the native GLFW window.
      */
-    protected long handle;
+    public static long handle;
 
     public static int Width;
     public static int Height;
@@ -79,6 +78,7 @@ public abstract class Window {
         decideGlGlslVersions();
 
         GLFW.glfwWindowHint(GLFW.GLFW_VISIBLE, GLFW.GLFW_FALSE);
+        GLFW.glfwWindowHint(GLFW.GLFW_RESIZABLE, GLFW.GLFW_FALSE);
         handle = GLFW.glfwCreateWindow(config.getWidth(), config.getHeight(), config.getTitle(), MemoryUtil.NULL, MemoryUtil.NULL);
 
         if (handle == MemoryUtil.NULL) {
@@ -100,13 +100,15 @@ public abstract class Window {
         GLFW.glfwMakeContextCurrent(handle);
         GL.createCapabilities();
 
-        GLFW.glfwSwapInterval(GLFW.GLFW_TRUE);
+        GLFW.glfwSwapInterval(1);
 
         if (config.isFullScreen()) {
             GLFW.glfwMaximizeWindow(handle);
         } else {
             GLFW.glfwShowWindow(handle);
         }
+
+        setIcon();
 
         clearBuffer();
         renderBuffer();
@@ -120,6 +122,18 @@ public abstract class Window {
                 runFrame();
             }
         });
+    }
+
+    private void setIcon() {
+        GLFWImage icon = GLFWImage.malloc();
+        GLFWImage.Buffer iconBuffer = GLFWImage.malloc(1);
+
+        IntBuffer w = BufferUtils.createIntBuffer(1);
+        IntBuffer h = BufferUtils.createIntBuffer(1);
+        ByteBuffer data = STBImage.stbi_load("assets/images/icon.png", w, h, BufferUtils.createIntBuffer(1), 4);
+        icon.set(w.get(), h.get(), data);
+        iconBuffer.put(0, icon);
+        GLFW.glfwSetWindowIcon(handle, iconBuffer);
     }
 
     private void decideGlGlslVersions() {

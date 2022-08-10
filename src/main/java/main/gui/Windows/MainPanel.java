@@ -48,6 +48,12 @@ public class MainPanel extends GuiWindow {
         }
         ImGui.popStyleColor(2);
         GuiPopup.Update("Create Project Menu");
+
+        ImGui.setCursorScreenPos(ImGui.getCursorScreenPosX() + (ImGui.getWindowWidth() - 320), ImGui.getCursorScreenPosY() + 5);
+        if (ImGui.button("Change Engine", 200, 50)) {
+            GuiPopup.Open("Locate Engine");
+        }
+        GuiPopup.Update("Locate Engine");
     }
 
     public static void CreateProject(String root, String projectName) {

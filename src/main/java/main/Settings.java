@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.File;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -55,7 +56,13 @@ public class Settings {
 
     public static Settings Load() {
         try {
-            String fileData = new String(Files.readAllBytes(new File(SETTINGS_FILE).toPath()));
+            Path path = Paths.get(SETTINGS_FILE);
+            if (!Files.exists(path)) {
+                Files.createFile(path);
+                Files.writeString(path, "{\"RadiumPath\": \"\",\"recentProjectArray\":[],\"LastCreatePath\":\"\"}");
+            }
+
+            String fileData = new String(Files.readAllBytes(path));
             ObjectMapper mapper = new ObjectMapper();
             Settings settings = mapper.readValue(fileData, Settings.class);
             Instance = settings;

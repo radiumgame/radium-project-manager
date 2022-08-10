@@ -7,6 +7,7 @@ import imgui.app.Window;
 import imgui.flag.*;
 import imgui.internal.ImGui;
 import imgui.type.ImBoolean;
+import main.gui.Popup.GuiPopup;
 import org.lwjgl.glfw.GLFW;
 
 import java.nio.IntBuffer;
@@ -19,7 +20,7 @@ public class Dockspace {
         ImGui.setNextWindowSize(Window.Width, Window.Height);
         ImGui.pushStyleVar(ImGuiStyleVar.WindowRounding, 0.0f);
         ImGui.pushStyleVar(ImGuiStyleVar.WindowBorderSize, 0.0f);
-        windowFlags |= ImGuiWindowFlags.NoDecoration | ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoMove | ImGuiWindowFlags.NoBringToFrontOnFocus | ImGuiWindowFlags.NoNavFocus;
+        windowFlags |= ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoMove | ImGuiWindowFlags.NoBringToFrontOnFocus;
 
         ImGui.begin(" ", new ImBoolean(true), windowFlags);
         ImGui.popStyleVar(2);
