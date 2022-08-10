@@ -98,7 +98,6 @@ public abstract class Window {
         }
 
         GLFW.glfwMakeContextCurrent(handle);
-
         GL.createCapabilities();
 
         GLFW.glfwSwapInterval(GLFW.GLFW_TRUE);

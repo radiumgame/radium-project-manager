@@ -1,17 +1,19 @@
 package main.gui.Popup;
 
 import imgui.ImGui;
+import imgui.flag.ImGuiWindowFlags;
 import main.FileExplorer;
+import main.Settings;
 import main.gui.GuiUtility;
-import main.gui.Windows.CreateProject;
+import main.gui.Windows.MainPanel;
 
 public class CreateProjectPopup extends GuiPopup {
 
-    private String projectPath = "";
     private String projectName = "New Project";
 
     public CreateProjectPopup() {
         super("Create Project Menu", PopupType.Modal);
+        flags = ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoMove;
     }
 
     @Override
@@ -19,18 +21,23 @@ public class CreateProjectPopup extends GuiPopup {
         ImGui.setWindowSize(500, 300);
         Center();
 
-        projectPath = GuiUtility.InputString("Project Path", projectPath);
+        Settings.Instance.LastCreatePath = GuiUtility.InputString("Project Path", Settings.Instance.LastCreatePath);
         ImGui.sameLine();
         if (ImGui.button("Choose")) {
             String res = FileExplorer.ChooseDirectory();
             if (FileExplorer.IsPathValid(res)) {
-                projectPath = res;
+                Settings.Instance.LastCreatePath = res;
             }
         }
 
         projectName = GuiUtility.InputString("Project Name", projectName);
         if (ImGui.button("Create Project")) {
-            CreateProject.CreateProject(projectPath, projectName);
+            MainPanel.CreateProject(Settings.Instance.LastCreatePath, projectName);
+            Settings.Instance.Save();
+            ImGui.closeCurrentPopup();
+        }
+        ImGui.sameLine();
+        if (ImGui.button("Cancel")) {
             ImGui.closeCurrentPopup();
         }
     }

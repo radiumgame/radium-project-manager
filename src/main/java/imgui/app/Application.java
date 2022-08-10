@@ -54,7 +54,7 @@ package imgui.app;
  */
 public abstract class Application extends Window {
 
-    public static boolean DevMode = true;
+    public static boolean DevMode = false;
 
     /**
      * Method called before window creation. Could be used to provide basic window information, like title name etc.

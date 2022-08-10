@@ -1,12 +1,15 @@
 package main.gui.Windows;
 
+import imgui.ImColor;
 import imgui.ImDrawList;
 import imgui.ImGui;
 import imgui.ImVec2;
 import imgui.app.Color;
-import imgui.flag.ImGuiCol;
-import imgui.flag.ImGuiStyleVar;
+import java.io.File;
+
+import main.Main;
 import main.Settings;
+import main.gui.Popup.GuiPopup;
 
 import java.util.List;
 
@@ -22,9 +25,11 @@ public class RecentProjects extends GuiWindow {
 
     @Override
     public void Render() {
+        ImGui.setCursorScreenPos(ImGui.getWindowPosX(), ImGui.getCursorScreenPosY());
+
         List<String> projects = Settings.Instance.RecentProjects;
-        for (String project : projects) {
-            RenderProject(project);
+        for (int i = 0; i < projects.size(); i++) {
+            RenderProject(projects.get(i));
         }
     }
 
@@ -33,9 +38,33 @@ public class RecentProjects extends GuiWindow {
         float wh = ImGui.getWindowHeight();
         ImVec2 pos = ImGui.getCursorScreenPos();
         boolean selected = project.equals(selectedProject);
+        boolean hovered = ImGui.isMouseHoveringRect(pos.x, pos.y, pos.x + ww, pos.y + 50) && !GuiPopup.IsPopupOpen();
+
+        File projectFile = new File(project);
+
+        int color = selected ? selectedColor.getImGuiCol() : 0;
+        if (hovered && !selected) {
+            color = ImColor.floatToColor(1, 1, 1, 0.15f);
+        }
 
         ImDrawList drawList = ImGui.getWindowDrawList();
-        drawList.addRectFilled(pos.x, pos.y, pos.x + (ww * 0.8f), pos.y + 50, selected ? selectedColor.getImGuiCol() : 0);
+        drawList.addRectFilled(pos.x, pos.y, pos.x + ww, pos.y + 50, color);
+        ImGui.pushFont(Main.getFont("large bold"));
+        drawList.addText(pos.x + 10, pos.y + 2.5f, Color.White.getImGuiCol(), projectFile.getName());
+        ImGui.popFont();
+        drawList.addText(pos.x + 10, pos.y + 27.5f, Color.White.getImGuiCol(), project);
+        if (ImGui.isMouseClicked(0)) {
+            if (hovered) {
+                selectedProject = project;
+            }
+        }
+
+        ImGui.setCursorScreenPos(pos.x + ww - 100, pos.y + 10);
+        if (ImGui.button("Open##" + project.hashCode(), 60, 30)) {
+            MainPanel.OpenProject(project);
+        }
+
+        ImGui.setCursorScreenPos(pos.x, pos.y + 50);
     }
 
 }

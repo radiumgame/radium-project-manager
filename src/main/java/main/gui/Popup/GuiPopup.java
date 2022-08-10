@@ -22,14 +22,14 @@ public abstract class GuiPopup {
         popups.add(this);
     }
 
+    public boolean open;
     public void Update() {
-        boolean isOpen = false;
         switch (popupType) {
-            case Standard -> isOpen = ImGui.beginPopup(title, flags);
-            case Modal -> isOpen = ImGui.beginPopupModal(title, flags);
+            case Standard -> open = ImGui.beginPopup(title, flags);
+            case Modal -> open = ImGui.beginPopupModal(title, flags);
         }
 
-        if (isOpen) {
+        if (open) {
             Render();
             ImGui.endPopup();
         }
@@ -37,7 +37,6 @@ public abstract class GuiPopup {
 
     public void Open() {
         ImGui.openPopup(title);
-        System.out.println("Open popup: " + title);
     }
 
     public void Center() {
@@ -65,6 +64,15 @@ public abstract class GuiPopup {
                 popup1.Update();
             }
         });
+    }
+
+    public static boolean IsPopupOpen() {
+        boolean open = false;
+        for (GuiPopup popup : popups) {
+            open = open || popup.open;
+        }
+
+        return open;
     }
 
     public static enum PopupType {

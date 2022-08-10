@@ -46,7 +46,7 @@ public class ModernDark extends Theme {
         style.setColor(ImGuiCol.SliderGrab, ImColor.floatToColor( 0.8f, 0.8f, 0.8f, 1.0f));			//
         style.setColor(ImGuiCol.SliderGrabActive, ImColor.floatToColor( 0.55f, 0.55f, 0.55f, 1.00f)); //
         style.setColor(ImGuiCol.Button, ImColor.floatToColor( 0.55f, 0.55f, 0.55f, 0.40f));			//
-        style.setColor(ImGuiCol.ButtonHovered, ImColor.floatToColor( 0.15f, 0.15f, 0.15f, 0.62f));	//
+        style.setColor(ImGuiCol.ButtonHovered, ImColor.floatToColor( 0.55f, 0.55f, 0.55f, 0.30f));	//
         style.setColor(ImGuiCol.ButtonActive, ImColor.floatToColor( 0.60f, 0.60f, 0.60f, 1.00f));		//
         style.setColor(ImGuiCol.Header, ImColor.floatToColor( 0.84f, 0.36f, 0.05f, 0.0f));			//
         style.setColor(ImGuiCol.HeaderHovered, ImColor.floatToColor( 0.25f, 0.25f, 0.25f, 0.80f));	//
