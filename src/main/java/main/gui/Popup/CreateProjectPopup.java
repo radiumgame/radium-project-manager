@@ -9,7 +9,7 @@ import main.gui.Windows.MainPanel;
 
 public class CreateProjectPopup extends GuiPopup {
 
-    private String projectName = "New Project";
+    private String projectName = "NewProject";
 
     public CreateProjectPopup() {
         super("Create Project Menu", PopupType.Modal);
@@ -32,6 +32,7 @@ public class CreateProjectPopup extends GuiPopup {
 
         projectName = GuiUtility.InputString("Project Name", projectName);
         if (ImGui.button("Create Project")) {
+            projectName = projectName.replaceAll(" ", "-");
             MainPanel.CreateProject(Settings.Instance.LastCreatePath, projectName);
             Settings.Instance.Save();
             ImGui.closeCurrentPopup();
