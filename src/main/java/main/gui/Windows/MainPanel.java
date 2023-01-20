@@ -6,6 +6,7 @@ import imgui.flag.ImGuiCol;
 import main.FileExplorer;
 import main.Settings;
 import main.Texture;
+import main.Util.FileUtility;
 import main.gui.Popup.GuiPopup;
 import org.eclipse.jgit.api.Git;
 
@@ -82,7 +83,9 @@ public class MainPanel extends GuiWindow {
             String radiumPath = Settings.Instance.RadiumPath;
             if (Settings.IsEnginePathValid()) {
                 Runtime runtime = Runtime.getRuntime();
-                runtime.exec(radiumPath + " " + projectDirectory);
+                String command = radiumPath + " " + "\"" + projectDirectory + "\"";
+                runtime.exec(command);
+                System.out.println(command);
 
                 Settings.AddRecentProject(projectDirectory);
             }
@@ -99,6 +102,13 @@ public class MainPanel extends GuiWindow {
             String extension = fileName.substring(fileName.lastIndexOf("."));
             if (fileName.contains("sample-project")) {
                 file.renameTo(new File(project.getAbsolutePath() + "/" + projectName + extension));
+            }
+
+            File newFile = new File(project.getAbsolutePath() + "/" + projectName + extension);
+            if (extension.equals(".config")) {
+                String content = FileUtility.ReadFile(newFile);
+                content = content.replace("sample-project", projectName);
+                FileUtility.Write(newFile, content, false);
             }
         }
     }
