@@ -8,11 +8,14 @@ import main.Settings;
 import main.Texture;
 import main.Util.FileUtility;
 import main.gui.Popup.GuiPopup;
-import org.eclipse.jgit.api.Git;
+//import org.eclipse.jgit.api.Git;
 
-import java.io.File;
+import java.io.*;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainPanel extends GuiWindow {
 
@@ -59,17 +62,15 @@ public class MainPanel extends GuiWindow {
 
     public static void CreateProject(String root, String projectName) {
         try {
-            Files.createDirectories(Paths.get(root + "/" + projectName));
-            Git git = Git.cloneRepository()
-                    .setURI("https://github.com/radiumgame/sample-project.git")
-                    .setDirectory(new File(root + "/" + projectName))
-                    .call();
-            git.close();
+            if (Files.exists(Paths.get(root + "/" + projectName))) {
+                return;
+            }
+
+            Path source = Paths.get("assets/sample-project/");
+            Path destination = Paths.get(root + "/" + projectName);
+            CopyFolder(source, destination);
 
             File project = new File(root + "/" + projectName);
-            File gitDirectory = git.getRepository().getDirectory();
-            DeleteDirectory(gitDirectory);
-            gitDirectory.delete();
             RenameFiles(project, projectName);
 
             Settings.AddRecentProject(project.getAbsolutePath());
@@ -77,6 +78,40 @@ public class MainPanel extends GuiWindow {
             e.printStackTrace();
         }
     }
+
+    private static void CopyFolder(Path source, Path destination) throws Exception {
+        CopyDirectory(new File(source.toString()), new File(destination.toString()));
+    }
+
+    private static void CopyDirectory(File sourceDirectory, File destinationDirectory) throws Exception {
+        if (!destinationDirectory.exists()) {
+            destinationDirectory.mkdir();
+        }
+        for (String f : sourceDirectory.list()) {
+            CopyDirectoryCompatibityMode(new File(sourceDirectory, f), new File(destinationDirectory, f));
+        }
+    }
+
+    public static void CopyDirectoryCompatibityMode(File source, File destination) throws Exception {
+        if (source.isDirectory()) {
+            CopyDirectory(source, destination);
+        } else {
+            CopyFile(source, destination);
+        }
+    }
+
+    private static void CopyFile(File sourceFile, File destinationFile)
+            throws Exception {
+        try (InputStream in = new FileInputStream(sourceFile);
+             OutputStream out = new FileOutputStream(destinationFile)) {
+            byte[] buf = new byte[1024];
+            int length;
+            while ((length = in.read(buf)) > 0) {
+                out.write(buf, 0, length);
+            }
+        }
+    }
+
 
     public static void OpenProject(String projectDirectory) {
         try {
