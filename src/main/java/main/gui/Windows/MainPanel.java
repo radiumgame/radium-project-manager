@@ -8,6 +8,8 @@ import main.Settings;
 import main.Texture;
 import main.Util.FileUtility;
 import main.gui.Popup.GuiPopup;
+import main.notification.ImNotification;
+import main.notification.ImNotify;
 //import org.eclipse.jgit.api.Git;
 
 import java.io.*;
@@ -114,13 +116,17 @@ public class MainPanel extends GuiWindow {
 
 
     public static void OpenProject(String projectDirectory) {
+        if (!Settings.Instance.currentEngine.valid) {
+            ImNotify.notify(new ImNotification("No Engine", "There is no engine selected or installed", 4, ImNotification.NotificationType.Error));
+            return;
+        }
+
         try {
-            String radiumPath = Settings.Instance.RadiumPath;
+            String radiumPath = Settings.Instance.currentEngine.path;
             if (Settings.IsEnginePathValid()) {
                 Runtime runtime = Runtime.getRuntime();
                 String command = radiumPath + " " + "\"" + projectDirectory + "\"";
                 runtime.exec(command);
-                System.out.println(command);
 
                 Settings.AddRecentProject(projectDirectory);
             }

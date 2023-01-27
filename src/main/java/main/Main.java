@@ -12,6 +12,7 @@ import main.gui.Popup.GuiPopup;
 import main.gui.Popup.LocateEngine;
 import main.gui.Windows.*;
 import main.gui.Themes.ModernDark;
+import main.notification.ImNotify;
 
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -59,19 +60,23 @@ public class Main extends Application {
         addFont("small", 14, FontType.Regular);
 
         config.setTheme(new ModernDark());
+
+        ImNotify.initialize(fonts.get("large"));
     }
 
     @Override
     public void process() {
         Dockspace.BeginDockspace();
 
-        windows.forEach(GuiWindow::Update);
         if (!Settings.IsEnginePathValid()) {
             GuiPopup.Open("Locate Engine");
         }
+
+        windows.forEach(GuiWindow::Update);
         GuiPopup.Update("Locate Engine");
 
         Dockspace.EndDockspace();
+        ImNotify.renderNotifications();
     }
 
     private static ImFont addFont(String name, int size, FontType ft) {

@@ -2,6 +2,7 @@ package main.gui;
 
 import imgui.ImGui;
 import imgui.app.Color;
+import imgui.type.ImInt;
 import imgui.type.ImString;
 
 public class GuiUtility {
@@ -18,6 +19,15 @@ public class GuiUtility {
 
     public static boolean Button(String content) {
         return ImGui.button(content);
+    }
+
+    public static int Dropdown(String label, int displayValue, String[] displayEnum) {
+        ImInt val = new ImInt(displayValue);
+        if (ImGui.combo(label, val, displayEnum, displayEnum.length)) {
+            return val.get();
+        }
+
+        return displayValue;
     }
 
     public static int DragInt(String label, int displayValue) {
