@@ -15,10 +15,15 @@ import main.gui.GuiUtility;
 import main.notification.ImNotification;
 import main.notification.ImNotify;
 
+import java.net.URL;
+import java.net.URLConnection;
+
 public class LocateEngine extends GuiPopup {
 
     private EngineInstall selectedEngine;
     private boolean installScreen = false;
+    private boolean loading = true;
+    private boolean canAccessInstall = false;
 
     private final int VersionFlags = ImGuiTreeNodeFlags.SpanAvailWidth | ImGuiTreeNodeFlags.Leaf | ImGuiTreeNodeFlags.FramePadding;
     private final int SelectedColor = ImColor.floatToColor(11f / 255f, 90f / 255f, 113f / 255f, 1f);
@@ -39,8 +44,17 @@ public class LocateEngine extends GuiPopup {
 
         if (!installScreen) {
             Chooser();
+        } else if (!loading) {
+            if (canAccessInstall) InstallScreen();
+            else {
+                ImGui.text("You must be connected to the internet to access the installation page.");
+                if (ImGui.button("Return")) {
+                    loading = true;
+                    installScreen = false;
+                }
+            }
         } else {
-            InstallScreen();
+            Loading();
         }
     }
 
@@ -92,9 +106,22 @@ public class LocateEngine extends GuiPopup {
         }
     }
 
+    private void Loading() {
+        ImGui.text("Loading...");
+
+        if (ConnectedToInternet()) {
+            loading = false;
+            canAccessInstall = true;
+        } else {
+            loading = false;
+            canAccessInstall = false;
+        }
+    }
+
     private final String[] availableVersions = {
       "v1.0.5",
     };
+
     private int selectedVersion = availableVersions.length - 1;
     private void InstallScreen() {
         selectedVersion = GuiUtility.Dropdown("Editor Version", selectedVersion, availableVersions);
@@ -111,6 +138,17 @@ public class LocateEngine extends GuiPopup {
         ImGui.sameLine();
         if (ImGui.button("Choose Engine")) {
             installScreen = false;
+        }
+    }
+
+    private boolean ConnectedToInternet() {
+        try {
+            URL url = new URL("http://www.google.com");
+            URLConnection connection = url.openConnection();
+            connection.connect();
+            return true;
+        } catch (Exception e) {
+            return false;
         }
     }
 
