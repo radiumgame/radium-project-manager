@@ -25,6 +25,7 @@ dependencies {
     implementation "org.lwjgl:lwjgl-nfd"
     runtimeOnly "org.lwjgl:lwjgl::natives-windows"
     runtimeOnly "org.lwjgl:lwjgl-glfw::natives-windows"
+    runtimeOnly "org.lwjgl:lwjgl-nfd::natives-windows"
     runtimeOnly "org.lwjgl:lwjgl-opengl::natives-windows"
     runtimeOnly "org.lwjgl:lwjgl-stb::natives-windows"
 }
