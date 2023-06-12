@@ -110,6 +110,8 @@ public class LocateEngine extends GuiPopup {
         ImGui.text("Loading...");
 
         if (ConnectedToInternet()) {
+            SetAvailableEngineVersions();
+
             loading = false;
             canAccessInstall = true;
         } else {
@@ -118,10 +120,7 @@ public class LocateEngine extends GuiPopup {
         }
     }
 
-    private final String[] availableVersions = {
-      "v1.0.5",
-    };
-
+    private String[] availableVersions = {};
     private int selectedVersion = availableVersions.length - 1;
     private void InstallScreen() {
         selectedVersion = GuiUtility.Dropdown("Editor Version", selectedVersion, availableVersions);
@@ -149,6 +148,30 @@ public class LocateEngine extends GuiPopup {
             return true;
         } catch (Exception e) {
             return false;
+        }
+    }
+
+    private void SetAvailableEngineVersions() {
+        try {
+            URL apiRoute = new URL("https://radium-api.vercel.app/versions");
+            URLConnection connection = apiRoute.openConnection();
+            String content = ReadStream(connection.getInputStream());
+            availableVersions = content.split(" ");
+            selectedVersion = availableVersions.length - 1;
+        } catch (Exception e) {}
+    }
+
+    private String ReadStream(java.io.InputStream in) {
+        try {
+            java.io.BufferedReader reader = new java.io.BufferedReader(new java.io.InputStreamReader(in));
+            StringBuilder out = new StringBuilder();
+            String line;
+            while ((line = reader.readLine()) != null) {
+                out.append(line);
+            }
+            return out.toString();
+        } catch (Exception e) {
+            return "";
         }
     }
 
